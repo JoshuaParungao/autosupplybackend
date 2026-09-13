@@ -14,6 +14,7 @@ const {
   assertIdempotencyMatch,
   createIdempotencyFingerprint,
 } = require("../../../utils/idempotency");
+const notificationService = require("../../../services/notification.service");
 
 const OWNER_ADMIN_ROLES = new Set(["SUPER_OWNER", "BRANCH_OWNER", "ADMIN"]);
 const STAFF_ROLES = new Set(["CASHIER", "TECHNICIAN"]);
@@ -1205,7 +1206,7 @@ const createSale = async (actor, payload, database = prisma) => {
     ? createIdempotencyFingerprint({ branchId, payload })
     : null;
 
-  return database.$transaction(async (tx) => {
+  const createdSale = await database.$transaction(async (tx) => {
     await tx.$queryRaw`SELECT "id" FROM "Branch" WHERE "id" = ${branchId} FOR UPDATE`;
 
     const branch = await ensureBranchExists(tx, branchId);
@@ -1453,6 +1454,12 @@ const createSale = async (actor, payload, database = prisma) => {
     sale.replayed = false;
     return sanitizeSaleCostSnapshotsForActor(sale, actor);
   });
+
+  if (createdSale && !createdSale.replayed) {
+    notificationService.dispatchPaymentReceived(createdSale);
+  }
+
+  return createdSale;
 };
 
 

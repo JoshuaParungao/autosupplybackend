@@ -23,6 +23,7 @@ app.use(cors({
       env.corsOrigins.includes(normalized) ||
       normalized.includes("vercel.app") ||
       (normalized.includes("sslip.io") && env.corsOrigins.some((o) => o.includes("sslip.io"))) ||
+      normalized.includes("pointify") ||
       normalized.includes("autosupply") ||
       normalized.includes("arunafeltzcomputerpos.cloud")
     ) {
@@ -41,9 +42,9 @@ app.use(morgan(env.nodeEnv === "development" ? "dev" : "combined"));
 
 app.get("/", (req, res) => {
   return sendSuccess(res, {
-    message: "Arunafeltz Backend API is running",
+    message: "Pointify Backend API is running",
     data: {
-      service: "arunafeltz-backend",
+      service: "pointify-backend",
       status: "online",
     },
   });
