@@ -117,7 +117,7 @@ const settings = [
     key: "receipt.business_name",
     category: "DOCUMENT",
     valueType: "STRING",
-    value: "Arunafeltz",
+    value: "Auto Supply",
     label: "Receipt Business Name",
     description: "Default business name shown on receipts and printable documents.",
   },

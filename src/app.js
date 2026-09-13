@@ -21,7 +21,9 @@ app.use(cors({
     if (
       env.corsOrigins.includes("*") ||
       env.corsOrigins.includes(normalized) ||
+      normalized.includes("vercel.app") ||
       (normalized.includes("sslip.io") && env.corsOrigins.some((o) => o.includes("sslip.io"))) ||
+      normalized.includes("autosupply") ||
       normalized.includes("arunafeltzcomputerpos.cloud")
     ) {
       return callback(null, true);
